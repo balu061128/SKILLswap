@@ -7,13 +7,14 @@ import { Edit, Star } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
-export default function ProfilePage() {
-  const user = getUserById('1');
-  const feedbacks = getFeedbackForUser('1');
-
+export default async function ProfilePage() {
+  const user = await getUserById('1');
+  
   if (!user) {
     return <div>User not found</div>;
   }
+
+  const feedbacks = await getFeedbackForUser('1');
 
   const averageRating = feedbacks.length > 0
     ? feedbacks.reduce((acc, f) => acc + f.rating, 0) / feedbacks.length
@@ -81,8 +82,8 @@ export default function ProfilePage() {
               </div>
               <Separator className="my-4"/>
               <ul className="divide-y divide-border">
-                {feedbacks.map(f => {
-                  const fromUser = getUserById(f.fromUserId);
+                {feedbacks.map(async (f) => {
+                  const fromUser = await getUserById(f.fromUserId);
                   return (
                     <li key={f.id} className="py-4">
                       <div className="flex items-start gap-4">
