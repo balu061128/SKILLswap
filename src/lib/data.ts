@@ -1,4 +1,6 @@
 import type { User, Skill, Session, Feedback } from './types';
+import { db } from './firebase';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 export const users: User[] = [
   {
@@ -102,8 +104,59 @@ export const feedbacks: Feedback[] = [
   },
 ];
 
-// Helper functions to get data
-export const getUserById = (id: string) => users.find(u => u.id === id);
-export const getSkillById = (id: string) => skills.find(s => s.id === id);
-export const getFeedbackForUser = (userId: string) => feedbacks.filter(f => f.toUserId === userId);
-export const getSessionsForUser = (userId: string) => sessions.filter(s => s.learnerId === userId || s.teacherId === userId);
+// Helper functions to get data from Firestore
+
+export const getUserById = async (id: string): Promise<User | undefined> => {
+  const docRef = doc(db, "users", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() } as User;
+  }
+  return undefined;
+};
+
+export const getSkillById = async (id: string): Promise<Skill | undefined> => {
+  const docRef = doc(db, "skills", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() } as Skill;
+  }
+  return undefined;
+}
+
+export const getFeedbackForUser = async (userId: string): Promise<Feedback[]> => {
+  const q = query(collection(db, "feedback"), where("toUserId", "==", userId));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Feedback));
+}
+
+export const getSessionsForUser = async (userId: string): Promise<Session[]> => {
+    const q = query(collection(db, "sessions"), where("learnerId", "==", userId));
+    const q2 = query(collection(db, "sessions"), where("teacherId", "==", userId));
+    
+    const [learnerSnapshot, teacherSnapshot] = await Promise.all([getDocs(q), getDocs(q2)]);
+    
+    const sessions: Session[] = [];
+    learnerSnapshot.forEach((doc) => {
+        const data = doc.data();
+        sessions.push({ ...data, id: doc.id, scheduledTime: data.scheduledTime.toDate() } as Session);
+    });
+    teacherSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (!sessions.find(s => s.id === doc.id)) {
+            sessions.push({ ...data, id: doc.id, scheduledTime: data.scheduledTime.toDate() } as Session);
+        }
+    });
+    
+    return sessions;
+}
+
+export const getAllSkills = async (): Promise<Skill[]> => {
+    const querySnapshot = await getDocs(collection(db, "skills"));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Skill));
+}
+
+export const getAllUsers = async (): Promise<User[]> => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
+};

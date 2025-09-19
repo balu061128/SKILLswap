@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
-import { skills, users } from "@/lib/data"
+import { getAllSkills, getUserById } from "@/lib/data"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AiRecommendations } from "@/components/dashboard/ai-recommendations"
 
-export default function DashboardPage() {
-  const currentUser = users[0];
+export default async function DashboardPage() {
+  const currentUser = await getUserById('1');
+  const skills = await getAllSkills();
+
+  if (!currentUser) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="grid gap-8 animate-in fade-in duration-500">
