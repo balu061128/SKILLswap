@@ -15,6 +15,8 @@ import {
   Sparkles,
   Settings,
   BrainCircuit,
+  MessageSquare,
+  PlusSquare,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -28,6 +30,7 @@ export function AppSidebar() {
     { href: '/explore', label: 'Explore', icon: Users },
     { href: '/matches', label: 'Find Matches', icon: Sparkles },
     { href: '/schedule', label: 'My Schedule', icon: Calendar },
+    { href: '/messages', label: 'Messages', icon: MessageSquare },
     { href: '/profile', label: 'My Profile', icon: Settings },
   ];
 
@@ -56,6 +59,18 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip={{children: "Create Room", side:"right"}}
+                className="w-full justify-start"
+              >
+                <a href="https://c0desync.netlify.app" target="_blank" rel="noopener noreferrer">
+                  <PlusSquare className="h-5 w-5" />
+                  <span>Create Room</span>
+                </a>
+              </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="p-4">
