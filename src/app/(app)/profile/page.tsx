@@ -2,22 +2,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { getFeedbackForUser, getUserById } from "@/lib/data";
+import { feedbacks, users } from "@/lib/data";
 import { Edit, Star } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
-export default async function ProfilePage() {
-  const user = await getUserById('1');
+export default function ProfilePage() {
+  const user = users.find(u => u.id === '1');
   
   if (!user) {
     return <div>User not found</div>;
   }
 
-  const feedbacks = await getFeedbackForUser('1');
+  const userFeedbacks = feedbacks.filter(f => f.toUserId === '1');
 
-  const averageRating = feedbacks.length > 0
-    ? feedbacks.reduce((acc, f) => acc + f.rating, 0) / feedbacks.length
+  const averageRating = userFeedbacks.length > 0
+    ? userFeedbacks.reduce((acc, f) => acc + f.rating, 0) / userFeedbacks.length
     : 0;
 
   return (
@@ -26,7 +26,7 @@ export default async function ProfilePage() {
         <CardContent className="p-6 flex flex-col md:flex-row items-start gap-6">
           <Avatar className="h-24 w-24">
             <AvatarImage src={user.avatarUrl} alt={user.name} />
-            <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+            <AvatarFallback>{user.name ? user.name.split(' ').map(n => n[0]).join('') : ''}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-start justify-between">
@@ -70,7 +70,7 @@ export default async function ProfilePage() {
           <CardDescription>What others say about your sessions.</CardDescription>
         </CardHeader>
         <CardContent>
-          {feedbacks.length > 0 ? (
+          {userFeedbacks.length > 0 ? (
             <>
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center">
@@ -78,18 +78,18 @@ export default async function ProfilePage() {
                     <Star key={i} className={`h-5 w-5 ${i < Math.round(averageRating) ? 'text-primary fill-primary' : 'text-muted-foreground/50'}`} />
                   ))}
                 </div>
-                <span className="text-muted-foreground text-sm">{averageRating.toFixed(1)} average rating from {feedbacks.length} reviews</span>
+                <span className="text-muted-foreground text-sm">{averageRating.toFixed(1)} average rating from {userFeedbacks.length} reviews</span>
               </div>
               <Separator className="my-4"/>
               <ul className="divide-y divide-border">
-                {feedbacks.map(async (f) => {
-                  const fromUser = await getUserById(f.fromUserId);
+                {userFeedbacks.map((f) => {
+                  const fromUser = users.find(u => u.id === f.fromUserId);
                   return (
                     <li key={f.id} className="py-4">
                       <div className="flex items-start gap-4">
                         <Avatar className="h-10 w-10">
                            <AvatarImage src={fromUser?.avatarUrl} alt={fromUser?.name} />
-                           <AvatarFallback>{fromUser?.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                           <AvatarFallback>{fromUser?.name ? fromUser?.name.split(' ').map(n => n[0]).join('') : ''}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">

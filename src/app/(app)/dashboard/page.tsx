@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
-import { getAllSkills, getUserById } from "@/lib/data"
+import { skills, users } from "@/lib/data"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AiRecommendations } from "@/components/dashboard/ai-recommendations"
 
-export default async function DashboardPage() {
-  const currentUser = await getUserById('1');
-  const skills = await getAllSkills();
+export default function DashboardPage() {
+  const currentUser = users.find(u => u.id === '1');
 
   if (!currentUser) {
     return <div>Loading...</div>
