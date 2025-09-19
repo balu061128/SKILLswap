@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "Two people collaborating over a laptop.",
+      "imageUrl": "https://picsum.photos/seed/1/600/400",
+      "imageHint": "collaboration learning"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "Avatar for Jane Doe",
+      "imageUrl": "https://picsum.photos/seed/101/100/100",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "Avatar for John Smith",
+      "imageUrl": "https://picsum.photos/seed/102/100/100",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "user-avatar-3",
+      "description": "Avatar for Alex Ray",
+      "imageUrl": "https://picsum.photos/seed/103/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-avatar-4",
+      "description": "Avatar for Sarah Chen",
+      "imageUrl": "https://picsum.photos/seed/104/100/100",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "skill-js",
+      "description": "JavaScript logo on a colored background",
+      "imageUrl": "https://picsum.photos/seed/201/300/200",
+      "imageHint": "code technology"
+    },
+    {
+      "id": "skill-python",
+      "description": "Python logo on a colored background",
+      "imageUrl": "https://picsum.photos/seed/202/300/200",
+      "imageHint": "abstract python"
+    },
+    {
+      "id": "skill-ux",
+      "description": "UX design process sketch",
+      "imageUrl": "https://picsum.photos/seed/203/300/200",
+      "imageHint": "design sketch"
+    },
+    {
+      "id": "skill-cooking",
+      "description": "Gourmet dish being prepared",
+      "imageUrl": "https://picsum.photos/seed/204/300/200",
+      "imageHint": "food cooking"
+    }
+  ]
 }
